@@ -1,30 +1,30 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:grade_converter/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('Grade conversion test', (WidgetTester tester) async {
+    // Build the app and trigger a frame
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Find the text field and button
+    final textField = find.byType(TextField);
+    final button = find.text('Convert to Letter Grade');
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Enter a valid score
+    await tester.enterText(textField, '85');
+    await tester.tap(button);
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify the result
+    expect(find.text('Letter Grade: B'), findsOneWidget);
+
+    // Enter an invalid input
+    await tester.enterText(textField, 'abc');
+    await tester.tap(button);
+    await tester.pump();
+
+    // Verify the error message
+    expect(find.text('Letter Grade: Invalid input'), findsOneWidget);
   });
 }
